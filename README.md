@@ -19,3 +19,8 @@ Environments (passed with `JSEVAL_ENV` environment variable):
   Evaluates as an ES Module
 - `script`
   Evaluates as an ES Script
+
+Other environment variables:
+- `JSEVAL_TIMEOUT`: sets the [vm](https://nodejs.org/api/vm.html) Script timeout
+- `JSEVAL_DEPTH`: formatting depth
+- `JSEVAL_COMPACT`: format with compact mode or not
