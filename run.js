@@ -125,7 +125,6 @@ if (!module.parent) {
       const result = await run(code, process.env.JSEVAL_ENV || 'node-cjs', +process.env.JSEVAL_TIMEOUT || undefined);
       process.stdout.write(inspect(result, {
         depth: process.env.JSEVAL_DEPTH ? +process.env.JSEVAL_DEPTH : undefined,
-        compact: process.env.JSEVAL_COMPACT === 'false' || process.env.JSEVAL_COMPACT === '0' ? false : process.env.JSEVAL_COMPACT
       }));
     } catch (error) {
       decorateErrorStack(error);

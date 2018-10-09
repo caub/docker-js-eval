@@ -8,7 +8,7 @@ const CONTAINER = 'devsnek/js-eval';
 module.exports = (code, { environment = 'node-cjs', timeout, cpus, memory, net = 'none' } = {}) =>
   new Promise((resolve, reject) => {
     const name = `jseval-${crypto.randomBytes(8).toString('hex')}`;
-    const args = ['run', '--rm', '-i', '-ljseval', `--net=${net}`, `-eJSEVAL_ENV=${environment}`];
+    const args = ['run', '--rm', '-i', `--name=${name}`, `--net=${net}`, `-eJSEVAL_ENV=${environment}`];
     if (timeout) {
       args.push(`-eJSEVAL_TIMEOUT=${timeout}`);
     }

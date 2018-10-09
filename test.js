@@ -31,11 +31,13 @@ execSync('docker build -t devsnek/js-eval:latest .');
     equal(err + '', 'ecmabot.js:1\n1 ++ 1\n^\n\nReferenceError: Invalid left-hand side expression in postfix operation');
   }
   try {
-    await jsEval('setTimeout(console.log, 5000, 2); 1;', { timeout: 5000 });
+    await jsEval('setTimeout(console.log, 5000, 2); 1;', { timeout: 4000 });
     ok(false);
   } catch (err) {
     equal(err + '', 'Error: (Timeout) 1');
   }
+
+  equal(execSync('docker ps -f name=jseval --format "{{json .}}"') + '', '');
   console.log('✔️ works from docker');
 })()
   .catch(e => console.error('ERR!', e))

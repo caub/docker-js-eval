@@ -23,4 +23,3 @@ Environments (passed with `JSEVAL_ENV` environment variable):
 Other environment variables:
 - `JSEVAL_TIMEOUT`: sets the [vm](https://nodejs.org/api/vm.html) Script timeout
 - `JSEVAL_DEPTH`: formatting depth
-- `JSEVAL_COMPACT`: format with compact mode or not
