@@ -17,7 +17,8 @@ eval('1 + 1', { memory: '8m' }).then(console.log) // 2
   - `node-esm`: Coming soon
   - `module`: Evaluates as an ES Module
   - `script`: Evaluates as an ES Script
-- `timeout`: timeout in ms for this code evaluation
+- `timeout`: timeout in ms for this code evaluation to complete
+- `runTimeout`: [vm](https://nodejs.org/api/vm.html) script execution timeout in ms
 - `cpus`: docker-run cpus option
 - `memory`: docker-run memory option
 - `net`: docker-run network option, default: 'none'
@@ -28,5 +29,5 @@ eval('1 + 1', { memory: '8m' }).then(console.log) // 2
 ```js run.js
 const run = require('docker-js-eval/run');
 
-run('1+1', 'node-cjs' /* environment */, 1000 /* timeout (optional) */ ).then(console.log) // 2
+run('1+1', 'node-cjs' /* environment */, 100 /* timeout (optional) */ ).then(console.log) // 2
 ```

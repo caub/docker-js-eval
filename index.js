@@ -5,12 +5,12 @@ const crypto = require('crypto');
 
 const CONTAINER = 'devsnek/js-eval';
 
-module.exports = (code, { environment = 'node-cjs', timeout, cpus, memory, net = 'none', stable } = {}) =>
+module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, memory, net = 'none', stable } = {}) =>
   new Promise((resolve, reject) => {
     const name = `jseval-${crypto.randomBytes(8).toString('hex')}`;
     const args = ['run', '--rm', '-i', `--name=${name}`, `--net=${net}`, `-eJSEVAL_ENV=${environment}`];
-    if (timeout) {
-      args.push(`-eJSEVAL_TIMEOUT=${timeout}`);
+    if (runTimeout) {
+      args.push(`-eJSEVAL_TIMEOUT=${runTimeout}`);
     }
     if (cpus) {
       args.push(`--cpus=${cpus}`);
@@ -35,7 +35,7 @@ module.exports = (code, { environment = 'node-cjs', timeout, cpus, memory, net =
         cp.exec(`docker kill ${name}`, () => {
           reject(`(Timeout) ${data}`);
         });
-      }, timeout + 200);
+      }, timeout);
     }
 
     let data = '';
