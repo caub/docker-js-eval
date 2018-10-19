@@ -10,7 +10,7 @@ const eval = require('docker-js-eval');
 eval('1 + 1', { memory: '8m' }).then(console.log) // 2
 ```
 
-## js-eval options:
+## [js-eval](index.js) options:
 
 - `environment`: `node-cjs|node-esm|module|script`
   - `node-cjs`: Like evaluating a normal Node.js CommonJS module (default)
@@ -25,9 +25,10 @@ eval('1 + 1', { memory: '8m' }).then(console.log) // 2
 - `stable`: disable harmony and experimental node flags, default: false
 
 
+### [run.js](run.js) usage:
 
-```js run.js
+```js
 const run = require('docker-js-eval/run');
 
-run('1+1', 'node-cjs' /* environment */, 100 /* timeout (optional) */ ).then(console.log) // 2
+run('1+1', 'node-cjs' /* environment */, 100 /* runTimeout (optional) */ ).then(console.log) // 2
 ```

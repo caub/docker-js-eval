@@ -33,7 +33,7 @@ module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, m
     if (timeout) {
       timer = setTimeout(() => {
         cp.exec(`docker kill ${name}`, () => {
-          reject(`(Timeout) ${data}`);
+          reject(new Error(`(Timeout) ${data}`));
         });
       }, timeout);
     }
@@ -50,7 +50,7 @@ module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, m
 
     proc.on('exit', (status) => {
       clearTimeout(timer);
-      if (status) return reject(data); // command code not 0, an error occured
+      if (status) return reject(new Error(data)); // command code not 0, an error occured
       resolve(data);
     });
   });

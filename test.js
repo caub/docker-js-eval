@@ -28,13 +28,13 @@ execSync('docker build -t devsnek/js-eval:latest .');
   try {
     await jsEval('1 ++ 1');
   } catch (err) {
-    equal(err, 'ecmabot.js:1\n1 ++ 1\n^\n\nReferenceError: Invalid left-hand side expression in postfix operation');
+    equal(err + '', 'Error: ecmabot.js:1\n1 ++ 1\n^\n\nReferenceError: Invalid left-hand side expression in postfix operation');
   }
   try {
     await jsEval('setTimeout(console.log, 5000, 2); 1;', { timeout: 4000 });
     ok(false);
   } catch (err) {
-    equal(err, '(Timeout) 1');
+    equal(err + '', 'Error: (Timeout) 1'); // only test error message
   }
 
   equal(await jsEval('const x=do {1};x'), '1');
@@ -42,7 +42,7 @@ execSync('docker build -t devsnek/js-eval:latest .');
     const x = await jsEval('const x=do {1};x', { stable: true });
     ok(false);
   } catch (e) {
-    equal(e, 'ecmabot.js:1\nconst x=do {1};x\n        ^^\n\nSyntaxError: Unexpected token do');
+    equal(e + '', 'Error: ecmabot.js:1\nconst x=do {1};x\n        ^^\n\nSyntaxError: Unexpected token do');
   }
 
   equal(execSync('docker ps -f name=jseval --format "{{json .}}"') + '', '');
