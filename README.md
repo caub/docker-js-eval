@@ -1,13 +1,13 @@
 # js-eval
 ```sh
-$ docker run --rm -i js-eval <<<'1 + 1'
+$ env JSEVAL_ENV="node-cjs" echo "1 + 1" | docker run --rm -i js-eval
 2
 ```
 
 ```js
 const eval = require('docker-js-eval');
 
-eval('1 + 1', { memory: '8m' }).then(console.log) // 2
+eval('1 + 1', 'script', { memory: '8m' }).then(console.log); // 2
 ```
 
 ## [js-eval](index.js) options:
@@ -30,5 +30,5 @@ eval('1 + 1', { memory: '8m' }).then(console.log) // 2
 ```js
 const run = require('docker-js-eval/run');
 
-run('1+1', 'node-cjs' /* environment */, 100 /* runTimeout (optional) */ ).then(console.log) // 2
+run('1 + 1', 'script', 100).then(console.log); // 2
 ```

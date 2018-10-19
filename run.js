@@ -121,7 +121,11 @@ if (!module.parent) {
       }
     }
     try {
-      const result = await run(code, process.env.JSEVAL_ENV || 'node-cjs', +process.env.JSEVAL_TIMEOUT || undefined);
+      const result = await run(
+        code,
+        process.env.JSEVAL_ENV,
+        Number.parseInt(process.env.JSEVAL_TIMEOUT, 10) || undefined,
+      );
       process.stdout.write(inspect(result));
     } catch (error) {
       decorateErrorStack(error);
