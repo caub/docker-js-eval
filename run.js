@@ -35,13 +35,12 @@ const createNewContext = () => {
   return createContext(O);
 };
 
-const inspect = (val, opts) => {
+const inspect = (val) => {
   try {
     return util.inspect(val, {
       maxArrayLength: 20,
       breakLength: Infinity,
       colors: false,
-      ...opts,
     });
   } catch {
     return '';
@@ -123,9 +122,7 @@ if (!module.parent) {
     }
     try {
       const result = await run(code, process.env.JSEVAL_ENV || 'node-cjs', +process.env.JSEVAL_TIMEOUT || undefined);
-      process.stdout.write(inspect(result, {
-        depth: process.env.JSEVAL_DEPTH ? +process.env.JSEVAL_DEPTH : undefined,
-      }));
+      process.stdout.write(inspect(result));
     } catch (error) {
       decorateErrorStack(error);
       const [result] = inspect(error).split(/at new (Script|Module)/);
