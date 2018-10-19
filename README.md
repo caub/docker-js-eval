@@ -18,7 +18,6 @@ eval('1 + 1', 'script', { memory: '8m' }).then(console.log); // 2
   - `module`: Evaluates as an ES Module
   - `script`: Evaluates as an ES Script
 - `timeout`: timeout in ms for this code evaluation to complete
-- `runTimeout`: [vm](https://nodejs.org/api/vm.html) script execution timeout in ms
 - `cpus`: docker-run cpus option
 - `memory`: docker-run memory option
 - `net`: docker-run network option, default: 'none'

@@ -5,12 +5,22 @@ const crypto = require('crypto');
 
 const CONTAINER = 'devsnek/js-eval';
 
-module.exports = (code, environment = 'node-cjs', { timeout, runTimeout, cpus, memory, net = 'none', stable } = {}) =>
+module.exports = (code, environment = 'node-cjs', { timeout, cpus, memory, net = 'none', stable } = {}) =>
   new Promise((resolve, reject) => {
     const name = `jseval-${crypto.randomBytes(8).toString('hex')}`;
     const args = ['run', '--rm', '-i', `--name=${name}`, `--net=${net}`, `-eJSEVAL_ENV=${environment}`];
-    if (runTimeout) {
-      args.push(`-eJSEVAL_TIMEOUT=${runTimeout}`);
+
+    let timer;
+    if (timeout) {
+      args.push(`-eJSEVAL_TIMEOUT=${timeout}`);
+      timer = setTimeout(() => {
+        try {
+          cp.execSync(`docker kill --signal=9 ${name}`);
+          reject(new Error('timeout'));
+        } catch (e) {
+          reject(e);
+        }
+      }, timeout + 10);
     }
     if (cpus) {
       args.push(`--cpus=${cpus}`);
@@ -33,15 +43,6 @@ module.exports = (code, environment = 'node-cjs', { timeout, runTimeout, cpus, m
     proc.stdout.on('data', (chunk) => {
       data += chunk;
     });
-
-    let timer;
-    if (timeout) {
-      timer = setTimeout(() => {
-        cp.exec(`docker kill ${name}`, () => {
-          reject(new Error(`(Timeout) ${data}`));
-        });
-      }, timeout);
-    }
 
     proc.on('error', (e) => {
       clearTimeout(timer);
