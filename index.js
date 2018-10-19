@@ -50,8 +50,8 @@ module.exports = (code, environment = 'node-cjs', { timeout, runTimeout, cpus, m
 
     proc.on('exit', (status) => {
       clearTimeout(timer);
-      if (status) {
-        reject(new Error(data)); // command code not 0, an error occured
+      if (status !== 0) {
+        reject(new Error(data));
       } else {
         resolve(data);
       }
