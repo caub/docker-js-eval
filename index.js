@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 const CONTAINER = 'devsnek/js-eval';
 
-module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, memory, net = 'none', stable } = {}) =>
+module.exports = (code, environment = 'node-cjs', { timeout, runTimeout, cpus, memory, net = 'none', stable } = {}) =>
   new Promise((resolve, reject) => {
     const name = `jseval-${crypto.randomBytes(8).toString('hex')}`;
     const args = ['run', '--rm', '-i', `--name=${name}`, `--net=${net}`, `-eJSEVAL_ENV=${environment}`];
@@ -29,6 +29,11 @@ module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, m
     proc.stdin.write(code);
     proc.stdin.end();
 
+    let data = '';
+    proc.stdout.on('data', (chunk) => {
+      data += chunk;
+    });
+
     let timer;
     if (timeout) {
       timer = setTimeout(() => {
@@ -38,11 +43,6 @@ module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, m
       }, timeout);
     }
 
-    let data = '';
-    proc.stdout.on('data', (chunk) => {
-      data += chunk;
-    });
-
     proc.on('error', (e) => {
       clearTimeout(timer);
       reject(e);
@@ -50,7 +50,10 @@ module.exports = (code, { environment = 'node-cjs', timeout, runTimeout, cpus, m
 
     proc.on('exit', (status) => {
       clearTimeout(timer);
-      if (status) return reject(new Error(data)); // command code not 0, an error occured
-      resolve(data);
+      if (status) {
+        reject(new Error(data)); // command code not 0, an error occured
+      } else {
+        resolve(data);
+      }
     });
   });

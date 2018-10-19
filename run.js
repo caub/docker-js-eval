@@ -10,7 +10,7 @@ const {
   arrow_message_private_symbol: kArrowMessagePrivateSymbolIndex,
   decorated_private_symbol: kDecoratedPrivateSymbolIndex,
 } = process.binding('util');
-const { toString: ObjectToString } = Object.prototype;
+const ObjectToString = Function.call.bind(Object.prototype.toString);
 
 const FILENAME = 'ecmabot.js';
 
