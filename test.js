@@ -20,8 +20,8 @@ execSync('docker build -t devsnek/js-eval:latest .');
   equal(await run('console.assert(fs.writeFile); console.assert(fs.readFile); console.assert(child_process.execSync); 1', 'node-cjs'), '1');
   console.log('✔️ exposes core node.js modules');
 
-  equal(`${execSync('echo "[2+2]" | node --no-warnings run')}`, '[ 4 ]');
-  equal(`${execSync('node --no-warnings run "({x:2+2})"')}`, '{ x: 4 }');
+  equal(`${execSync('export JSEVAL_ENV=node-cjs; echo "[2+2]" | node --no-warnings run')}`, '[ 4 ]');
+  equal(`${execSync('export JSEVAL_ENV=node-cjs; node --no-warnings run "({x:2+2})"')}`, '{ x: 4 }');
   console.log('✔️ works from command-line');
 
   equal(`${await jsEval('[1, 2+3, util.inspect({x:2+2})]')}`, '[ 1, 5, \'{ x: 4 }\' ]');
@@ -31,19 +31,21 @@ execSync('docker build -t devsnek/js-eval:latest .');
     equal(`${err}`, 'Error: ecmabot.js:1\n1 ++ 1\n^\n\nReferenceError: Invalid left-hand side expression in postfix operation');
   }
   try {
-    await jsEval('setTimeout(console.log, 5000, 2); 1;', { timeout: 4000 });
+    await jsEval('setTimeout(console.log, 5000, 2); 1;', 'node-cjs', { timeout: 4000 });
     ok(false);
   } catch (err) {
-    equal(`${err}`, 'Error: (Timeout) 1'); // only test error message
+    equal(`${err}`, 'Error: (timeout) 1'); // only test error message
   }
 
   equal(await jsEval('const x=do {1};x'), '1');
   try {
-    const x = await jsEval('const x=do {1};x', { stable: true });
+    const x = await jsEval('const x=do {1};x', 'node-cjs', { stable: true });
     ok(false);
   } catch (e) {
     equal(`${e}`, 'Error: ecmabot.js:1\nconst x=do {1};x\n        ^^\n\nSyntaxError: Unexpected token do');
   }
+
+  await new Promise(r => setTimeout(r, 1000));
 
   equal(`${execSync('docker ps -f name=jseval --format "{{json .}}"')}`, '');
   console.log('✔️ works from docker');

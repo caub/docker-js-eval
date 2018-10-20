@@ -99,7 +99,6 @@ const run = async (code, environment, timeout) => {
   if (environment === 'script') {
     const script = new Script(code, {
       filename: FILENAME,
-      timeout,
       displayErrors: true,
     });
     return script.runInContext(createNewContext(), {

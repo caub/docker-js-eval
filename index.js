@@ -16,7 +16,7 @@ module.exports = (code, environment = 'node-cjs', { timeout, cpus, memory, net =
       timer = setTimeout(() => {
         try {
           cp.execSync(`docker kill --signal=9 ${name}`);
-          reject(new Error('timeout'));
+          reject(new Error('(timeout) ' + data)); // send data received so far
         } catch (e) {
           reject(e);
         }
@@ -32,7 +32,7 @@ module.exports = (code, environment = 'node-cjs', { timeout, cpus, memory, net =
     args.push(CONTAINER);
 
     if (stable) {
-      args.push('node', '/run/run.js');
+      args.push('node', '--no-warnings', '/run/run.js');
     }
 
     const proc = cp.spawn('docker', args);

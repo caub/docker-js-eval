@@ -1,8 +1,8 @@
 FROM mhart/alpine-node
 LABEL author=me@gus.host
 
-RUN adduser -D -s /bin/bash -h /var/ws anon
-COPY run.js /var/run/
+RUN adduser -D -h /var/ws anon
+COPY run.js /run/
 WORKDIR /var/ws
 USER anon
 
@@ -17,4 +17,4 @@ CMD ["node", \
   "--experimental-vm-modules", \
   "--experimental-modules", \
   "--no-warnings", \
-  "/var/run/run.js"]
+  "/run/run.js"]
