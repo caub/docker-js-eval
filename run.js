@@ -13,6 +13,7 @@ const {
 const ObjectToString = Function.call.bind(Object.prototype.toString);
 
 const FILENAME = 'ecmabot.js';
+const ERR_STACK_FILENAME = new RegExp(FILENAME + ':1\\r?\\n'); // we then remove it from error stack
 
 const isError = (e) => ObjectToString.call(e) === '[object Error]' || e instanceof Error;
 
@@ -128,7 +129,7 @@ if (!module.parent) {
       process.stdout.write(inspect(result));
     } catch (error) {
       decorateErrorStack(error);
-      const [result] = inspect(error).split(/at new (Script|Module)/);
+      const [result] = inspect(error).replace(ERR_STACK_FILENAME, '').split(/^    at /m, 1);
       process.stdout.write(result.trim());
       process.exit(1);
     }
